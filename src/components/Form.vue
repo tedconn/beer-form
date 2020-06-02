@@ -2,17 +2,19 @@
   <form
     name="contact"
     method="post"
-    netlify
-    data-netlify-honeypot="bot-field">
+    data-netlify="true"
+    data-netlify-honeypot="bot-field"
+    v-on:submit.prevent="handleSubmit"
+    action="/success">
 
     <input type="hidden" name="form-name" value="contact" />
     <div>
       <label for="name" class="label">Votre nom :</label>
-      <input type="text" name="name" v-model="userName" />
+      <input type="text" name="name" v-model="formData.name" />
     </div>
     <div>
       <label for="email" class="label">Votre email :</label>
-      <input type="text" name="email"  v-model="email" />
+      <input type="text" name="email"  v-model="formData.email" />
     </div>
     <div>
       <label for="email" class="label">Votre email :</label>
@@ -26,10 +28,10 @@
     <ul class="beer-list">
       <li v-for="item in selectedBeers" :key=item.value>
         🍺 {{item.label}} x {{item.quantity}}
-        <input hidden :name="item.value" :value="item.quantity" />
+        <input hidden :name="item.value" v-model="formData[item.value]"/>
       </li>
     </ul>
-    <button type="button" @click="handleSubmit">Send</button>
+    <button type="submit">Send</button>
   </form>
 </template>
 
@@ -38,8 +40,7 @@ export default {
   name: 'Form',
   data: function() {
     return {
-      userName: "",
-      email: "",
+      formData: {},
       selectedBeers: [],
       completeData: {},
       beerOptions: [
@@ -75,21 +76,14 @@ export default {
     deleteBeer: function() {
 
     },
-    handleSubmit(e) {
-      const completeData = {
-        email: this.email,
-        name: this.userName,
-        beers: this.selectedBeers
-      };
-
-      console.log(e.target);
-
+    handleSubmit() {
       fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: this.encode({
           "form-name": "form-name",
-          ...completeData,
+          ...this.formData,
+          ...this.selectedBeers
         }),
       });
     },
