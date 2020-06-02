@@ -27,6 +27,7 @@
     <ul class="beer-list">
       <li v-for="item in selectedBeers" :key=item.value>
         🍺 {{item.label}} x {{item.quantity}}
+        <input hidden :name="item.value" :value="item.quantity" />
       </li>
     </ul>
   </form>
@@ -66,6 +67,10 @@ export default {
       } else {
         this.selectedBeers.push(selectedBeer);
       }
+    },
+
+    deleteBeer: function() {
+      
     }
   }
 }
