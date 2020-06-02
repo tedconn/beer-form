@@ -8,11 +8,11 @@
     <input type="hidden" name="form-name" value="contact" />
     <div>
       <label for="name" class="label">Votre nom :</label>
-      <input type="text" name="name" />
+      <input type="text" name="name" v-model="userName" />
     </div>
     <div>
       <label for="email" class="label">Votre email :</label>
-      <input type="text" name="email" />
+      <input type="text" name="email"  v-model="email" />
     </div>
     <div>
       <label for="email" class="label">Votre email :</label>
@@ -29,7 +29,7 @@
         <input hidden :name="item.value" :value="item.quantity" />
       </li>
     </ul>
-    <button type="submit">Send</button>
+    <button type="button" @click="handleSubmit">Send</button>
   </form>
 </template>
 
@@ -38,7 +38,10 @@ export default {
   name: 'Form',
   data: function() {
     return {
+      userName: "",
+      email: "",
       selectedBeers: [],
+      completeData: {},
       beerOptions: [
         { "label": "Biére Brune", value: "brune", quantity: 0 },
         { "label": "Biére Blonde", value: "blonde", quantity: 0 },
@@ -71,7 +74,32 @@ export default {
 
     deleteBeer: function() {
 
-    }
+    },
+    handleSubmit(e) {
+      const completeData = {
+        email: this.email,
+        name: this.userName,
+        beers: this.selectedBeers
+      };
+
+      console.log(e.target);
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: this.encode({
+          "form-name": "form-name",
+          ...completeData,
+        }),
+      });
+    },
+    encode(data) {
+      return Object.keys(data)
+        .map(
+          (key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
+        )
+        .join('&');
+    },
   }
 }
 </script>
