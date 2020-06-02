@@ -3,7 +3,7 @@
     name="contact"
     method="post"
     action="/success"
-    data-netlify="true"
+    netlify
     data-netlify-honeypot="bot-field">
 
     <input type="hidden" name="form-name" value="contact" />
@@ -30,6 +30,7 @@
         <input hidden :name="item.value" :value="item.quantity" />
       </li>
     </ul>
+    <button type="submit">Send</button>
   </form>
 </template>
 
@@ -70,7 +71,7 @@ export default {
     },
 
     deleteBeer: function() {
-      
+
     }
   }
 }
